@@ -1,6 +1,7 @@
 # JavaScript-Tetris
 Little JavaScript project created by following this Youtube video:
-[Code Tetris: JavaScript Tutorial for Beginners] (https://www.youtube.com/watch?v=rAUn1Lom6dw)
+
+[Code Tetris: JavaScript Tutorial for Beginners](https://www.youtube.com/watch?v=rAUn1Lom6dw)
 
 ## Known bugs:
 
