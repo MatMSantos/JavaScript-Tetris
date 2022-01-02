@@ -7,8 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // As the rectangle is 10 squares in width, the first element of each line is indexed as '0', '10', '20', and so on.
     let squares = Array.from(document.querySelectorAll('.grid div'))
 
-    const ScoreDisplay = document.querySelector('#score')
-    const StartBtn = document.querySelector('#start-button')
+    const scoreDisplay = document.querySelector('#score')
+    const startBtn = document.querySelector('#start-button')
+    let timerId
+    let score = 0
 
     // Each line is 10 squares in length, it's useful to store this number for later.
     const width = 10
@@ -82,10 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    // Function to make the pieces descend constantly
-    // 'setInterval' will call the function 'moveDown' every 1000ms (1s)
-    timerId = setInterval(moveDown, 1000)
-
     // Function that determines what to do for each key press. 
     function control(e) {
         if (e.keyCode === 37) {
@@ -120,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentPosition = 4
             draw()
             displayShape()
+            addScore()
         }
     }
 
@@ -186,5 +185,37 @@ document.addEventListener('DOMContentLoaded', () => {
         upNextTetrominoes[nextRandom].forEach(index => {
             displaySquares[displayIndex + index].classList.add('tetromino')
         })
+    }
+
+    startBtn.addEventListener('click', () => {
+        if (timerId) {
+            clearInterval(timerId)
+            timerId = null
+        } else {
+            draw()
+            // Function to make the pieces descend constantly
+            // 'setInterval' will call the function 'moveDown' every 1000ms (1s)
+            timerId = setInterval(moveDown, 1000)
+            nextRandom = Math.floor(Math.random() * theTetrominos.length)
+            displayShape()
+        }
+    })
+
+    function addScore(){
+        for (let i = 0; i < 199; i += width) {
+            const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9]
+
+            if (row.every(index => squares[index].classList.contains('taken'))) {
+                score += 10
+                score.innerHTML = score
+                row.forEach(index => {
+                    squares[index].classList.remove('taken')
+                    squares[index].classList.remove('tetromino')
+                })
+                const squaresRemoved = squares.splice(i, width)
+                squares = squaresRemoved.concat(squares)
+                squares.forEach(cell => grid.appendChild(cell))
+            }
+        }
     }
 })
